@@ -22,6 +22,7 @@ public:
     void UniversityData();
 
     std::vector<Data> getData();
+    void sortData();
 
     int getNewStudents();
     int getTotalStudents();
