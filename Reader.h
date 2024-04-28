@@ -26,5 +26,4 @@ public:
     int getTotalStudents();
     int getGraduatedStudents();
 
-
 };

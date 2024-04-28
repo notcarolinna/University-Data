@@ -1,59 +1,46 @@
-#include <iostream>
-#include <iomanip>
-#include <vector>
-#include <map>
 #include "Reader.h"
+#include <algorithm>
+#include <vector>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
 
-std::vector<std::vector<double>> dataMatrix(const std::vector<Data>& data) {
+void gaussianElimination(std::vector<std::vector<double>>& matrix) {
+    int numRows = matrix.size();
+    int numCols = matrix[0].size() - 1;
 
-    std::map<std::string, int> semesterID;
-    int id = 1;
-    for (const auto& item : data) {
-        if (semesterID.find(item.getInitialSemester()) == semesterID.end()) {
-            semesterID[item.getInitialSemester()] = id++;
+    for (int i = 0; i < numRows - 1; ++i) {
+        double maxPivot = std::abs(matrix[i][i]);
+        int maxRowIndex = i;
+        for (int k = i + 1; k < numRows; ++k) {
+            if (std::abs(matrix[k][i]) > maxPivot) {
+                maxPivot = std::abs(matrix[k][i]);
+                maxRowIndex = k;
+            }
         }
-        if (semesterID.find(item.getNextSemester()) == semesterID.end()) {
-            semesterID[item.getNextSemester()] = id++;
+
+        // Trocar a linha atual pela linha com o pivô máximo
+        if (maxRowIndex != i) {
+            std::swap(matrix[i], matrix[maxRowIndex]);
+        }
+
+        // Eliminação gaussiana
+        for (int k = i + 1; k < numRows; ++k) {
+            double factor = matrix[k][i] / matrix[i][i];
+            for (int j = i; j < numCols; ++j) {
+                matrix[k][j] -= factor * matrix[i][j];
+            }
         }
     }
 
-    int totalSemesters = semesterID.size();
-
-    std::vector<std::vector<double>> transitionMatrix(totalSemesters + 1, std::vector<double>(totalSemesters + 1, 0.0));
-
-    for (const auto& item : data) {
-        int fromSemester = semesterID[item.getInitialSemester()];
-        int toSemester = semesterID[item.getNextSemester()];
-        double probability = std::stod(item.getProbability());
-        transitionMatrix[toSemester][fromSemester] = probability; 
-    }
-
-    for (int i = 1; i <= totalSemesters; ++i) {
+    // Fase de retrosubstituição
+    for (int i = numRows - 1; i >= 0; --i) {
         double sum = 0.0;
-        for (int j = 1; j <= totalSemesters; ++j) {
-            sum += transitionMatrix[i][j];
+        for (int j = i + 1; j < numCols; ++j) {
+            sum += matrix[i][j] * matrix[j][numCols];
         }
-        transitionMatrix[i][i] = -sum;
-    }
-
-    return transitionMatrix;
-}
-
-void printTransitionMatrix(const std::vector<std::vector<double>>& matrix) {
-    std::cout << std::setw(5) << " ";
-    for (size_t i = 1; i < matrix.size(); ++i) { 
-        std::cout << std::setw(10) << i;
-    }
-    std::cout << std::endl;
-
-    for (size_t i = 1; i < matrix.size(); ++i) { 
-
-        std::cout << std::setw(5) << i;
-
-        for (size_t j = 1; j < matrix[i].size(); ++j) { 
-            std::cout << std::setw(10) << std::fixed << std::setprecision(4) << matrix[i][j];
-        }
-        std::cout << std::endl;
+        matrix[i][numCols] = (matrix[i][numCols] - sum) / matrix[i][i];
     }
 }
 
@@ -62,10 +49,23 @@ int main() {
     reader.UniversityData();
     std::vector<Data> data = reader.getData();
 
-    std::vector<std::vector<double>> transitionMatrix = dataMatrix(data);
+    std::vector<std::vector<double>> matrix(data.size(), std::vector<double>(data.size() + 1, 0.0));
+    for (size_t i = 0; i < data.size(); ++i) {
+        matrix[i][i] = std::stod(data[i].getProbability());
+        if (i < data.size() - 1) {
+            matrix[i + 1][i] = std::stod(data[i].getProbability());
+        }
+    }
+    matrix[data.size() - 1][data.size()] = 1.0;
 
-    std::cout << "Matrix:" << std::endl;
-    printTransitionMatrix(transitionMatrix);
+    gaussianElimination(matrix);
+
+    for (size_t i = 0; i < matrix.size(); ++i) {
+        for (size_t j = 0; j < matrix[i].size(); ++j) {
+            std::cout << std::setw(10) << matrix[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
 
     return 0;
 }
