@@ -20,12 +20,12 @@ void gaussianElimination(std::vector<std::vector<double>>& matrix) {
             }
         }
 
-        // Trocar a linha atual pela linha com o pivÙ m·ximo
+        // Trocar a linha atual pela linha com o piv√¥ m√°ximo
         if (maxRowIndex != i) {
             std::swap(matrix[i], matrix[maxRowIndex]);
         }
 
-        // EliminaÁ„o gaussiana
+        // Elimina√ß√£o gaussiana
         for (int k = i + 1; k < numRows; ++k) {
             double factor = matrix[k][i] / matrix[i][i];
             for (int j = i; j < numCols; ++j) {
@@ -42,6 +42,7 @@ void gaussianElimination(std::vector<std::vector<double>>& matrix) {
         }
         matrix[i][numCols] = (matrix[i][numCols] - sum) / matrix[i][i];
     }
+
 }
 
 int main() {
@@ -59,6 +60,8 @@ int main() {
     matrix[data.size() - 1][data.size()] = 1.0;
 
     gaussianElimination(matrix);
+
+    std::cout << std::fixed << std::setprecision(4);
 
     for (size_t i = 0; i < matrix.size(); ++i) {
         for (size_t j = 0; j < matrix[i].size(); ++j) {
