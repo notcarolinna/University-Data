@@ -11,19 +11,14 @@ private:
     std::string file;
     std::vector<Data> dataVector;
     int newStudents;
-    int totalStudents;
-    int graduatedStudents;
 
 public:
     Reader();
     Reader(std::string file);
     void UniversityData();
-
-    std::vector<Data> getData();
     void sortData();
 
     int getNewStudents();
-    int getTotalStudents();
-    int getGraduatedStudents();
+    std::vector<Data> getData();    
 
 };

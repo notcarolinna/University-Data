@@ -34,7 +34,7 @@ void gaussianElimination(std::vector<std::vector<double>>& matrix) {
         }
     }
 
-    // Fase de retrosubstituição
+    // Backsubstitution
     for (int i = numRows - 1; i >= 0; --i) {
         double sum = 0.0;
         for (int j = i + 1; j < numCols; ++j) {
