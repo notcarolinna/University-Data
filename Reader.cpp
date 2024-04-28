@@ -21,7 +21,7 @@ void Reader::UniversityData() {
     }
 
     inFile >> trash >> trash >> trash >> newStudents;
-    std::cout << "Novos alunos: " << newStudents << std::endl;
+    std::cout << "New Students: " << newStudents << std::endl;
 
     while (true) {
         std::string initialSemester, probability, nextSemester;
@@ -42,8 +42,8 @@ void Reader::UniversityData() {
 
 bool dataSorting(const Data& a, const Data& b) {
 
-    // Para ordenar o arquivo, comparo o nÃºmero da primeira string de semestre com a segunda
-    // Se a penÃºltima linha for a string com diploma, troco ela de lugar com a Ãºltima
+    // Para ordenar o arquivo, comparo o número da primeira string de semestre com a segunda
+    // Se a penúltima linha for a string com diploma, troco ela de lugar com a última
 
     if (a.getNextSemester() == "Diploma" && b.getNextSemester() != "Diploma")
         return false; 

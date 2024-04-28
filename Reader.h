@@ -1,11 +1,9 @@
 #pragma once
-#include <string>
 #include <vector>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include "Data.h"
-
 
 class Reader {
 private:
