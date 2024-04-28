@@ -1,4 +1,5 @@
 #include "Reader.h"
+#include <algorithm>
 
 Reader::Reader() {}
 
@@ -7,6 +8,7 @@ Reader::Reader(std::string file) {
     this->newStudents = 0;
     this->totalStudents = 0;
     this->graduatedStudents = 0;
+    data = nullptr;
 }
 
 void Reader::UniversityData() {
@@ -34,9 +36,30 @@ void Reader::UniversityData() {
     }
 
     inFile.close();
+    sortData();
+
 }
 
+bool dataSorting(const Data& a, const Data& b) {
 
+    // Para ordenar o arquivo, comparo o número da primeira string de semestre com a segunda
+    // Se a penúltima linha for a string com diploma, troco ela de lugar com a última
+
+    if (a.getNextSemester() == "Diploma" && b.getNextSemester() != "Diploma")
+        return false; 
+    if (a.getNextSemester() != "Diploma" && b.getNextSemester() == "Diploma")
+        return true; 
+
+    if (a.getInitialSemester() != b.getInitialSemester())
+        return a.getInitialSemester() < b.getInitialSemester();
+    if (a.getProbability() != b.getProbability())
+        return a.getProbability() < b.getProbability();
+    return a.getNextSemester() < b.getNextSemester();
+}
+
+void Reader::sortData() {
+    std::sort(dataVector.begin(), dataVector.end(), dataSorting);
+}
 
 std::vector<Data> Reader::getData() {
     return dataVector;
