@@ -13,7 +13,6 @@ private:
     int newStudents;
 
 public:
-    Reader();
     Reader(std::string file);
     void UniversityData();
     void sortData();

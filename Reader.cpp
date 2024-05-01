@@ -1,8 +1,6 @@
 ﻿#include "Reader.h"
 #include <algorithm>
 
-Reader::Reader() {}
-
 Reader::Reader(std::string file) {
     this->file = file;
     this->newStudents = 0;
@@ -14,7 +12,7 @@ void Reader::UniversityData() {
     std::string trash;
 
     if (!inFile.is_open()) {
-        std::cerr << "Erro ao abrir o arquivo: " << file << std::endl;
+        std::cerr << "Error opening file: " << file << std::endl;
         return;
     }
 
@@ -38,21 +36,25 @@ void Reader::UniversityData() {
 
 }
 
-bool dataSorting(const Data& a, const Data& b) {
+bool dataSorting(const Data& str1, const Data& str2) {
 
-    // Para ordenar o arquivo, comparo o n�mero da primeira string de semestre com a segunda
-    // Se a penultima linha for a string com diploma, troco ela de lugar com a ultima
-
-    if (a.getNextSemester() == "Diploma" && b.getNextSemester() != "Diploma")
+    if (str1.getNextSemester() == "Diploma" && str2.getNextSemester() != "Diploma")
         return false;
-    if (a.getNextSemester() != "Diploma" && b.getNextSemester() == "Diploma")
+    if (str1.getNextSemester() != "Diploma" && str2.getNextSemester() == "Diploma")
         return true;
 
-    if (a.getInitialSemester() != b.getInitialSemester())
-        return a.getInitialSemester() < b.getInitialSemester();
-    if (a.getProbability() != b.getProbability())
-        return a.getProbability() < b.getProbability();
-    return a.getNextSemester() < b.getNextSemester();
+    if (str1.getInitialSemester() != str2.getInitialSemester()) {
+        if (str1.getInitialSemester().size() == str2.getInitialSemester().size()) {
+            return str1.getInitialSemester() < str2.getInitialSemester();
+        }
+        return str1.getInitialSemester().size() < str2.getInitialSemester().size();
+    }
+
+    if (str1.getNextSemester().size() == str2.getNextSemester().size()) {
+        return str1.getNextSemester() < str2.getNextSemester();
+    }
+
+    return str1.getNextSemester().size() < str2.getNextSemester().size();
 }
 
 void Reader::sortData() {
