@@ -1,9 +1,4 @@
-﻿#include "Reader.h"
-#include <algorithm>
-#include <vector>
-#include <iostream>
-#include <fstream>
-#include <sstream>
+#include "Reader.h"
 #include <iomanip>
 
 void gaussianElimination(std::vector<std::vector<double>>& matrix) {
